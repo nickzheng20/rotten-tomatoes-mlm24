@@ -1,0 +1,7 @@
+predictions/images
+data/train/vertical_flipped
+data/train/composed_test/
+utils/__pycache__/
+unet/__pycache__/
+model_checkpoint/
+log/
