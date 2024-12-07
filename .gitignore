@@ -6,3 +6,7 @@ unet/__pycache__/
 model_checkpoint/
 log/
 models/
+.gitignore.swp
+.ipynb_checkpoints/
+unet/.ipynb_checkpoints/
+utils/.ipynb_checkpoints/
