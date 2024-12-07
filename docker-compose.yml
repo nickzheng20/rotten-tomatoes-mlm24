@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  app:
+    image: rottentomatoes
+    container_name: rt-1
+    build:
+      context: .          
+      dockerfile: Dockerfile
+    runtime: nvidia       
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    shm_size: '8g'        
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all  
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+    command: sleep infinity
