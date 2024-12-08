@@ -4,3 +4,5 @@ data/train/composed_test/
 utils/__pycache__/
 unet/__pycache__/
 .ipynb_checkpoints/
+log/
+model_checkpoint/
