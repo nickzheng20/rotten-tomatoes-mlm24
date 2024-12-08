@@ -115,7 +115,7 @@ class TrainSession:
         if not os.path.exists("model_checkpoint/"):
             os.makedirs("model_checkpoint/")
             
-        model_path = f"model_checkpoint/{args.name}.pt" if args.name else f"model_checkpoint/model_{self.timestamp}.pt"
+        model_path = f"model_checkpoint/{args.output_name}.pt" if args.output_name else f"model_checkpoint/model_{self.timestamp}.pt"
         torch.save(self.model.state_dict(), model_path)
 
 if __name__ == "__main__":
@@ -130,7 +130,7 @@ if __name__ == "__main__":
     parser.add_argument('-n', '--num-workers', default=os.cpu_count() // 2, type=int)
     parser.add_argument('-g', '--grad-accumulation', default=True, type=bool)
     parser.add_argument('-s', '--grad-acc-steps', default=4, type=int)
-    parser.add_argument('-n', '--name', default=None, type=str)
+    parser.add_argument('-o', '--output_name', default=None, type=str)
 
     args = parser.parse_args()
 
