@@ -57,6 +57,7 @@ class DoubleTomatoLeafModel(torch.nn.Module):
             in_channels: int=3,
             inner_channels: int=1,
             out_classes: int=1,
+            image_model_weights_path: str=None,
             **kwargs
     ):
         super().__init__()
@@ -68,6 +69,11 @@ class DoubleTomatoLeafModel(torch.nn.Module):
             out_classes=out_classes,
             **kwargs
         )
+        # freeze the weight in TomatoLeafModel
+        if image_model_weights_path:
+            self.image_model.load_state_dict(torch.load(image_model_weights_path))
+            # for param in self.image_model.parameters():
+            #     param.requires_grad = False
 
         self.mask_model = TomatoLeafMaskModel(
             encoder_name=encoder_name,

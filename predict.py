@@ -37,16 +37,17 @@ def main():
         test_df.loc[test_df['id'] == id, 'annotation'] = encode_mask(pred_mask.detach(), 0.9)
         # test_df['annotation'] = encode_mask(pred_mask.detach(), 0.9)
 
-    if not os.path.exists("predictions"):
-        os.makedirs("predictions")
+    output_path = f"predictions/{args.name}" if args.name else "predictions"
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
 
-    test_df.to_csv("predictions/sample_submission.csv")
+    test_df.to_csv(f"predictions/{args.name}/{args.name}_submission.csv")
 
     if args.image:
-        images, masks = load_and_decode("predictions/sample_submission.csv", TESTDIR + "test")
+        images, masks = load_and_decode(f"predictions/{args.name}/{args.name}_submission.csv", TESTDIR + "test")
         for i in range(len(images)):
             name = test_df.iloc[i]['id']
-            display_image_and_mask(images[i], masks[i], name, "predictions/images")
+            display_image_and_mask(images[i], masks[i], name, f"predictions/{args.name}/images")
 
            
 

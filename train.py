@@ -27,7 +27,7 @@ class TrainSession:
 
         # Load the model
         # self.model = TomatoLeafModel()
-        self.model = DoubleTomatoLeafModel()
+        self.model = DoubleTomatoLeafModel(image_model_weights_path=args.input_model_path)
         self.model.to(args.device)
 
         self.T_max = args.epoch * len(self.train_loader)
@@ -42,6 +42,9 @@ class TrainSession:
         self.device = args.device
 
         self.timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        
+        self.best_loss = float('inf')
+        
         if not os.path.exists("log/tb"):
             os.makedirs("log/tb")
 
@@ -89,6 +92,8 @@ class TrainSession:
             del loss, logits_pred_mask, mask
             if self.device == torch.mps:
                 torch.mps.empty_cache()
+            if self.device == "cuda":
+                torch.cuda.empty_cache()
 
         avg_loss = running_loss/(i + 1)
 
@@ -102,7 +107,9 @@ class TrainSession:
 
             # Go through the entire dataset once
             avg_loss = self.train_one_epoch(epoch)
-
+            if avg_loss < self.best_loss:
+                self.best_loss = avg_loss
+                self.save_model(best_model=True)
             # Log the statistics
             print(f"Train Loss: {avg_loss}")
             self.writer.add_scalar("Average Training Loss", avg_loss, epoch)
@@ -111,11 +118,14 @@ class TrainSession:
             
         self.save_model()
 
-    def save_model(self):
+    def save_model(self, best_model=False):
         if not os.path.exists("model_checkpoint/"):
             os.makedirs("model_checkpoint/")
-            
-        model_path = f"model_checkpoint/{args.output_name}.pt" if args.output_name else f"model_checkpoint/model_{self.timestamp}.pt"
+        if not best_model:
+            model_path = f"model_checkpoint/{args.output_name}.pt" if args.output_name else f"model_checkpoint/model_{self.timestamp}.pt"
+        else:
+            model_path = f"model_checkpoint/{args.output_name}_best.pt" if args.output_name else f"model_checkpoint/model_{self.timestamp}_best.pt"
+
         torch.save(self.model.state_dict(), model_path)
 
 if __name__ == "__main__":
@@ -131,6 +141,7 @@ if __name__ == "__main__":
     parser.add_argument('-g', '--grad-accumulation', default=True, type=bool)
     parser.add_argument('-s', '--grad-acc-steps', default=4, type=int)
     parser.add_argument('-o', '--output_name', default=None, type=str)
+    parser.add_argument('-i', '--input_model_path', default=None, type=str)
 
     args = parser.parse_args()
 
