@@ -8,11 +8,12 @@ The project is an extension of the [Plant Pathology Image Processor](https://dsi
 ## Methods
 Our team modified the U-Net architecture by appending a smaller U-Net that takes the base segmentation logits and outputs a "refined" segmentation logit. The final prediction of the model concatenated model is "refined" added with the "unrefined" logits. In addition, we used a ResNET34 backbone pretrained on the Imagenet dataset. We trained our model using the AdamW optimizer with a Cosine Annealing schedule.
 
-## Results
-Our model did best lol.
-
 ## Conclusion
 From our experiments, we believe that components and modules that captures fine-grained details/dependencies of the image only marginally improves its segmentation capability. Instead, our experiments show that refining/improving the segmentation is the key to improve the performance of our model. In the future, we would like to explore methods/models that can enhance/refine the segmentation results.
 
 ## References
-*Insert references*
+<a id="1">[1]</a> 
+Artem Sevastopolsky, Stepan Drapak, Konstantin Kiselev, Blake M. Snyder, Jeremy D. Keenan, and Anastasia Georgievskaya. 2018. Stack-U-Net: Refinement Network for Image Segmentation on the Example of Optic Disc and Cup.
+
+<a id="2">[2]</a> 
+Tsung-Han Tsai and Shih-An Huang. 2022. Refined U-net: A new semantic technique on hand segmentation. Neurocomputing 495, (2022), 1–10. DOI:https://doi.org/https://doi.org/10.1016/j.neucom.2022.04.079
